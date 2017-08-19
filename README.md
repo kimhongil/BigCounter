@@ -2,7 +2,7 @@
 
 Full Screen Counter
 
-Show full screen count by adjusting font size with bisection method on the html web page.
+Show fullscreen counter on the html web page.
 
 ## Usage
 
@@ -23,7 +23,7 @@ Show full screen count by adjusting font size with bisection method on the html 
 
 ## Demo
 
-[BigCounter Demo](http://hongil.kim/BigCounter)
+[BigCounter Demo](https://kimhongil.github.io/BigCounter/)
 
 ## Based on
 
