@@ -12,8 +12,8 @@ Show full screen count by adjusting font size with bisection method on the html 
 |---|---|
 | Increment | Any key or click |
 | Decrement | Minus sign or backspace |
-| Reset Zero | 0 or ESC |
-| Toggle full Screen | s, S or Double click |
+| Reset zero | 0 or ESC |
+| Toggle full screen | s, S or double click |
 | Change background color | b, B |
 | Help | h, H |
 
