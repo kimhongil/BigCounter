@@ -6,14 +6,6 @@ Show full screen count by adjusting font size with bisection method on the html 
 
 ## Usage
 
-### GET Parameters
-
-`ratio` default 1
-
-Examples:
-
-`/?ratio=.8` this will show the big number with a ratio of 0.8
-
 ### KEYBOARD & MOUSE
 
 | What | keyboard & Mouse  |
@@ -25,12 +17,6 @@ Examples:
 | Change background color | b, B |
 | Help | h, H |
 
-## Based on
-
-[DanielHoffmann/jquery-bigtext](https://github.com/DanielHoffmann/jquery-bigtext)
-
-[qinst64/html-big-text](https://github.com/qinst64/html-big-text)
-
 ## Screenshot
 
 ![Screenshot 1](screenshot/screenshot1.jpg)
@@ -38,6 +24,12 @@ Examples:
 ## Demo
 
 [BigCounter Demo](http://hongil.kim/BigCounter)
+
+## Based on
+
+[BrOrlandi/big-text.js](https://github.com/BrOrlandi/big-text.js)
+
+[qinst64/html-big-text](https://github.com/qinst64/html-big-text)
 
 ## License
 

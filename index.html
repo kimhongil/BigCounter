@@ -45,25 +45,17 @@
     ///////////////////////////////////////////////////////////////
     // Global Variables
     var count = 0;
-    var ratio;
     var helpMode;
     var helpText = "" +
 "Big Counter v1.0<br>" +
 "<br>" +
 "This script prints the full screen number.<br>" +
 "<br>" +
-"<br>" +
-"GET Parameters: <br>" +
-"- ratio: default 1<br>" +
-"<br>" +
-"Examples:<br>" +
-"- /?ratio=.8  => this will show the big number with a ratio of 0.8<br>" +
-"<br>" +
 "KEYBOARD & MOUSE<br>" +
 "- Increment: Any key or click<br>" +
 "- Decrement: Minus sign or backspace<br>" +
 "- Reset Zero: 0 or ESC<br>" +
-"- Full Screen: f, F or Double click<br>" +
+"- Full Screen: f, F or double click<br>" +
 "- Change background color: b , B<br>" +
 "- Help: h, H<br>" +
 "<br>" +
@@ -87,7 +79,7 @@
     });
 
     $("#text").click(function () {
-      setText(1, ratio);
+      setText(1);
     });
 
     $("#text").dblclick(function () {
@@ -97,18 +89,18 @@
     $(document).keyup(function (event) {
       console.log(event.which);
       if (event.which == 8) { // Backspace
-        setText(-1, ratio);
+        setText(-1);
       } else if (event.which == 27) { // ESC
-        setText(0, ratio);
+        setText(0);
       }
     });
 
     $(document).keypress(function (event) {
       console.log("keypress: ", event.which);
       if (event.which == 45) {  // Minus
-        setText(-1, ratio);
+        setText(-1);
       } else if (event.which == 48) { // Zero
-        setText(0, ratio);
+        setText(0);
       } else if (event.which == 72 || event.which == 104) { // Help: h, H
         help();
       } else if (event.which == 70 || event.which == 102) { // Full Screen: f, F
@@ -116,12 +108,11 @@
       } else if (event.which == 66 || event.which == 98) { // Change background color: b, B
         randomBackgroundColor();
       } else {
-        setText(1, ratio);
+        setText(1);
       }
     });
 
     jQuery(document).ready(function() {
-      ratio = urlParam("ratio", 1);
       help();
     });
 
@@ -130,9 +121,8 @@
 
     function help() {
       helpMode = true;
-      $("#text").css("text-align","left");
       $("#text").html(helpText);
-      BigText("#text");
+      BigText("#text", {fontSizeFactor: 1, textAlign: "left"});
     }
 
     function randomBackgroundColor() {
@@ -142,7 +132,7 @@
       $("body").css("background-color", darkBackgroundColors[index]);
     }
 
-    function setText(sign, ratio) {
+    function setText(sign) {
       var txt;
 
       if (sign == 0) {
@@ -150,7 +140,6 @@
       } else {
         if (helpMode == true) {
           helpMode = false;
-          $('#text').css('text-align','center');
           randomBackgroundColor();
           txt = count - 1;
         } else {
@@ -162,13 +151,7 @@
       count = txt;
       $("#text").text(txt);
 
-	  BigText("#text");
-    }
-
-    function urlParam(name, defaultVal = null) {
-      var rx = new RegExp('[\&|\?]' + name + '=([^\&\#]+)'),
-        val = window.location.search.match(rx);
-      return !val ? defaultVal : val[1];
+  	  BigText("#text", {fontSizeFactor: 1});
     }
 
     function toggleFullscreen(elem) {
