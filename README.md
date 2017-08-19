@@ -13,7 +13,7 @@ Show full screen count by adjusting font size with bisection method on the html 
 | Increment | Any key or click |
 | Decrement | Minus sign or backspace |
 | Reset Zero | 0 or ESC |
-| Toggle full Screen | f, F or Double click |
+| Toggle full Screen | s, S or Double click |
 | Change background color | b, B |
 | Help | h, H |
 
@@ -30,6 +30,8 @@ Show full screen count by adjusting font size with bisection method on the html 
 [BrOrlandi/big-text.js](https://github.com/BrOrlandi/big-text.js)
 
 [qinst64/html-big-text](https://github.com/qinst64/html-big-text)
+
+[tommoor/fontselect-jquery-plugin](http://github.com/tommoor/fontselect-jquery-plugin)
 
 ## License
 
