@@ -1,0 +1,202 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Big Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3F51B5">
+  <!-- mdl -->
+  <link href="https://cdn.bootcss.com/material-design-lite/1.2.0/material.min.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/material-design-lite/1.2.0/material.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- jquery -->
+  <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://rawgit.com/BrOrlandi/big-text.js/master/big-text.js"></script>
+  <style>
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #3A3643;
+      color: #FFFFFF;
+      overflow: hidden;
+      /*no select*/
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: -moz-none;
+      -ms-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
+
+    #text {
+      white-space: nowrap;
+      line-height: 100%;
+      text-align: center;
+      /*justify*/
+      font-family: "Times New Roman", Georgia, Serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="text">
+  </div>
+  <script>
+    ///////////////////////////////////////////////////////////////
+    // Global Variables
+    var count = 0;
+    var ratio;
+    var helpMode;
+    var helpText = "" +
+"Big Counter v1.0<br>" +
+"<br>" +
+"This script prints the full screen number.<br>" +
+"<br>" +
+"<br>" +
+"GET Parameters: <br>" +
+"- ratio: default 1<br>" +
+"<br>" +
+"Examples:<br>" +
+"- /?ratio=.8  => this will show the big number with a ratio of 0.8<br>" +
+"<br>" +
+"KEYBOARD & MOUSE<br>" +
+"- Increment: Any key or click<br>" +
+"- Decrement: Minus sign or backspace<br>" +
+"- Reset Zero: 0 or ESC<br>" +
+"- Full Screen: f, F or Double click<br>" +
+"- Change background color: b , B<br>" +
+"- Help: h, H<br>" +
+"<br>" +
+"Copyright all right reserved.<br>" +
+"https://github.com/kimhongil/BigCounter/<br>" +
+"<br>" +
+"<font color='red'>PRESS ANY KEY TO CONTINUE...</font>";
+    var backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7", 
+    "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
+    "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
+    "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"];
+    var darkBackgroundColors = ["#D32F2F", "#C2185B", "#7B1FA2", "#512DA8", 
+    "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#00796B",
+    "#388E3C", "#689F38", "#AFB42B", "#FBC02D", "#FFA000",
+    "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"];
+
+  ///////////////////////////////////////////////////////////////
+  // Events
+  $(window).resize(function () {
+      BigText("#text");
+    });
+
+    $("#text").click(function () {
+      setText(1, ratio);
+    });
+
+    $("#text").dblclick(function () {
+      toggleFullscreen();
+    });
+
+    $(document).keyup(function (event) {
+      console.log(event.which);
+      if (event.which == 8) { // Backspace
+        setText(-1, ratio);
+      } else if (event.which == 27) { // ESC
+        setText(0, ratio);
+      }
+    });
+
+    $(document).keypress(function (event) {
+      console.log("keypress: ", event.which);
+      if (event.which == 45) {  // Minus
+        setText(-1, ratio);
+      } else if (event.which == 48) { // Zero
+        setText(0, ratio);
+      } else if (event.which == 72 || event.which == 104) { // Help: h, H
+        help();
+      } else if (event.which == 70 || event.which == 102) { // Full Screen: f, F
+        toggleFullscreen();
+      } else if (event.which == 66 || event.which == 98) { // Change background color: b, B
+        randomBackgroundColor();
+      } else {
+        setText(1, ratio);
+      }
+    });
+
+    jQuery(document).ready(function() {
+      ratio = urlParam("ratio", 1);
+      help();
+    });
+
+    ///////////////////////////////////////////////////////////////
+    // Function
+
+    function help() {
+      helpMode = true;
+      $("#text").css("text-align","left");
+      $("#text").html(helpText);
+      BigText("#text");
+    }
+
+    function randomBackgroundColor() {
+      var index;
+
+      index = Math.floor(Math.random() * darkBackgroundColors.length);
+      $("body").css("background-color", darkBackgroundColors[index]);
+    }
+
+    function setText(sign, ratio) {
+      var txt;
+
+      if (sign == 0) {
+        txt = 0
+      } else {
+        if (helpMode == true) {
+          helpMode = false;
+          $('#text').css('text-align','center');
+          randomBackgroundColor();
+          txt = count - 1;
+        } else {
+          txt = parseInt($("#text").text());
+        }
+        txt += sign;
+      }
+
+      count = txt;
+      $("#text").text(txt);
+
+	  BigText("#text");
+    }
+
+    function urlParam(name, defaultVal = null) {
+      var rx = new RegExp('[\&|\?]' + name + '=([^\&\#]+)'),
+        val = window.location.search.match(rx);
+      return !val ? defaultVal : val[1];
+    }
+
+    function toggleFullscreen(elem) {
+      elem = elem || document.documentElement;
+      if (!document.fullscreenElement && !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
