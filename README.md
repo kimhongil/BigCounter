@@ -24,6 +24,7 @@ Show fullscreen counter on the html web page.
 ## Demo
 
 [BigCounter Demo 1](https://kimhongil.github.io/BigCounter/)
+
 [BigCounter Demo 2 (Clickable)](http://hongil.kim/BigCounter/)
 
 ## Based on
