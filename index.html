@@ -40,41 +40,52 @@
     }
   </style>
 
-<script>
+  <script>
     ///////////////////////////////////////////////////////////////
     // Global Variables
     var count = 0;
     var helpMode;
     var helpText = "" +
-"Big Counter v1.0<br>" +
-"<br>" +
-"This script prints the full screen number.<br>" +
-"<br>" +
-"KEYBOARD & MOUSE<br>" +
-"- Increment: Any key or click<br>" +
-"- Decrement: Minus sign or backspace<br>" +
-"- Reset Zero: 0 or ESC<br>" +
-"- Full Screen: f, F or double click<br>" +
-"- Change background color: b , B<br>" +
-"- Help: h, H<br>" +
-"<br>" +
-"Copyright all right reserved.<br>" +
-"https://github.com/kimhongil/BigCounter/<br>" +
-"<br>" +
-"<font color='red'>PRESS ANY KEY TO CONTINUE...</font>";
-    var backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7", 
-    "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
-    "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
-    "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"];
-    var darkBackgroundColors = ["#D32F2F", "#C2185B", "#7B1FA2", "#512DA8", 
-    "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#00796B",
-    "#388E3C", "#689F38", "#AFB42B", "#FBC02D", "#FFA000",
-    "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"];
+      "Big Counter v1.0<br>" +
+      "<br>" +
+      "This script prints the full screen number.<br>" +
+      "<br>" +
+      "KEYBOARD & MOUSE<br>" +
+      "- Increment: Any key, click<br>" +
+      "- Decrement: Minus sign, backspace<br>" +
+      "- Reset zero: 0, ESC<br>" +
+      "- Full screen: f, double click<br>" +
+      "- Change background color: b<br>" +
+      "- Help: h<br>" +
+      "<br>" +
+      "Copyright all right reserved.<br>" +
+      "https://github.com/kimhongil/BigCounter/<br>" +
+      "<br>" +
+      "<font color='red'>PRESS ANY KEY TO CONTINUE...</font>";
+    var backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
+      "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
+      "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
+      "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"
+    ];
+    var darkBackgroundColors = ["#D32F2F", "#C2185B", "#7B1FA2", "#512DA8",
+      "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#00796B",
+      "#388E3C", "#689F38", "#AFB42B", "#FBC02D", "#FFA000",
+      "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"
+    ];
 
-  ///////////////////////////////////////////////////////////////
-  // Events
-  $(window).resize(function () {
-      BigText("#text");
+    ///////////////////////////////////////////////////////////////
+    // Events
+    $(window).resize(function () {
+      if (helpMode == true) {
+        BigText("#text", {
+          fontSizeFactor: 1,
+          textAlign: "left"
+        });
+      } else {
+        BigText("#text", {
+          fontSizeFactor: 1
+        });
+      }
     });
 
     $("#text").click(function () {
@@ -96,7 +107,7 @@
 
     $(document).keypress(function (event) {
       console.log("keypress: ", event.which);
-      if (event.which == 45) {  // Minus
+      if (event.which == 45) { // Minus
         setText(-1);
       } else if (event.which == 48) { // Zero
         setText(0);
@@ -111,18 +122,18 @@
       }
     });
 
-    jQuery(document).ready(function() {
-      $('#font').fontselect().change(function(){
+    jQuery(document).ready(function () {
+      $('#font').fontselect().change(function () {
 
-          // replace + signs with spaces for css
-          var font = $(this).val().replace(/\+/g, ' ');
+        // replace + signs with spaces for css
+        var font = $(this).val().replace(/\+/g, ' ');
 
-          // split font into family and weight
-          font = font.split(':');
+        // split font into family and weight
+        font = font.split(':');
 
-          // set family on paragraphs
-          $('#text').css('font-family', font[0]);
-        });
+        // set family on paragraphs
+        $('#text').css('font-family', font[0]);
+      });
 
       help();
     });
@@ -133,7 +144,10 @@
     function help() {
       helpMode = true;
       $("#text").html(helpText);
-      BigText("#text", {fontSizeFactor: 1, textAlign: "left"});
+      BigText("#text", {
+        fontSizeFactor: 1,
+        textAlign: "left"
+      });
     }
 
     function randomBackgroundColor() {
@@ -162,7 +176,9 @@
       count = txt;
       $("#text").text(txt);
 
-  	  BigText("#text", {fontSizeFactor: 1});
+      BigText("#text", {
+        fontSizeFactor: 1
+      });
     }
 
     function toggleFullscreen(elem) {
