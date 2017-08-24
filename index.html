@@ -310,15 +310,6 @@
       }
     });
 
-    $("#text").click(function () {
-      console.log("click");
-      setText(1);
-    });
-
-    $("#text").dblclick(function () {
-      toggleFullscreen();
-    });
-
     $(document).keyup(function (event) {
       console.log(event.which);
       if (event.which == 8) { // Backspace
@@ -348,6 +339,14 @@
     });
 
     jQuery(document).ready(function () {
+      $("#text").click(function () {
+      setText(1);
+    });
+
+    $("#text").dblclick(function () {
+      toggleFullscreen();
+    });
+
       help();
     });
 
