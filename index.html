@@ -53,8 +53,9 @@
       "- Increment: Any key, click<br>" +
       "- Decrement: Minus sign, backspace<br>" +
       "- Reset zero: 0, ESC<br>" +
-      "- Full screen: f, double click<br>" +
-      "- Change background color: b<br>" +
+      "- Full screen: S, double click<br>" +
+      "- Change background color: B<br>" +
+      "- Change font: F<br>" +
       "- Help: h<br>" +
       "<br>" +
       "Copyright all right reserved.<br>" +
@@ -298,16 +299,7 @@
     ///////////////////////////////////////////////////////////////
     // Events
     $(window).resize(function () {
-      if (helpMode == true) {
-        BigText("#text", {
-          fontSizeFactor: 1,
-          textAlign: "left"
-        });
-      } else {
-        BigText("#text", {
-          fontSizeFactor: 1
-        });
-      }
+      refresh();
     });
 
     $(document).keyup(function (event) {
@@ -364,6 +356,19 @@
       });
     }
 
+    function refresh() {
+      if (helpMode == true) {
+        BigText("#text", {
+          fontSizeFactor: 1,
+          textAlign: "left"
+        });
+      } else {
+        BigText("#text", {
+          fontSizeFactor: 1
+        });
+      }
+    }
+
     function randomBackgroundColor() {
       var index;
 
@@ -382,9 +387,9 @@
 
       style = toStyle(font);
       $('#text').css(style);
-      BigText("#text", {
-        fontSizeFactor: 1
-      });
+
+      refresh();
+
       console.log(fonts[index]);
     }
 
