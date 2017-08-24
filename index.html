@@ -13,8 +13,7 @@
   <!-- jquery -->
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
   <script type="text/javascript" src="https://rawgit.com/BrOrlandi/big-text.js/master/big-text.js"></script>
-  <link rel="stylesheet" type="text/css" href="fontselect/fontselect.css" />
-  <script type="text/javascript" src="fontselect/jquery.fontselect.min.js"></script>
+   
   <style>
     body {
       margin: 0 !important;
@@ -61,7 +60,8 @@
       "Copyright all right reserved.<br>" +
       "https://github.com/kimhongil/BigCounter/<br>" +
       "<br>" +
-      "<font color='red'>PRESS ANY KEY TO CONTINUE...</font>";
+      "<font color='red'>PRESS ANY KEY TO CONTINUE...</font><br>" +
+      "<br>";
     var backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
       "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
       "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
@@ -73,6 +73,228 @@
       "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"
     ];
 
+    var fonts = [
+      "Aclonica",
+      "Allan",
+      "Annie+Use+Your+Telescope",
+      "Anonymous+Pro",
+      "Allerta+Stencil",
+      "Allerta",
+      "Amaranth",
+      "Anton",
+      "Architects+Daughter",
+      "Arimo",
+      "Artifika",
+      "Arvo",
+      "Asset",
+      "Astloch",
+      "Bangers",
+      "Bentham",
+      "Bevan",
+      "Bigshot+One",
+      "Bowlby+One",
+      "Bowlby+One+SC",
+      "Brawler",
+      "Buda:300",
+      "Cabin",
+      "Calligraffitti",
+      "Candal",
+      "Cantarell",
+      "Cardo",
+      "Carter One",
+      "Caudex",
+      "Cedarville+Cursive",
+      "Cherry+Cream+Soda",
+      "Chewy",
+      "Coda",
+      "Coming+Soon",
+      "Copse",
+      "Corben:700",
+      "Cousine",
+      "Covered+By+Your+Grace",
+      "Crafty+Girls",
+      "Crimson+Text",
+      "Crushed",
+      "Cuprum",
+      "Damion",
+      "Dancing+Script",
+      "Dawning+of+a+New+Day",
+      "Didact+Gothic",
+      "Droid+Sans",
+      "Droid+Sans+Mono",
+      "Droid+Serif",
+      "EB+Garamond",
+      "Expletus+Sans",
+      "Fontdiner+Swanky",
+      "Forum",
+      "Francois+One",
+      "Geo",
+      "Give+You+Glory",
+      "Goblin+One",
+      "Goudy+Bookletter+1911",
+      "Gravitas+One",
+      "Gruppo",
+      "Hammersmith+One",
+      "Holtwood+One+SC",
+      "Homemade+Apple",
+      "Inconsolata",
+      "Indie+Flower",
+      "IM+Fell+DW+Pica",
+      "IM+Fell+DW+Pica+SC",
+      "IM+Fell+Double+Pica",
+      "IM+Fell+Double+Pica+SC",
+      "IM+Fell+English",
+      "IM+Fell+English+SC",
+      "IM+Fell+French+Canon",
+      "IM+Fell+French+Canon+SC",
+      "IM+Fell+Great+Primer",
+      "IM+Fell+Great+Primer+SC",
+      "Irish+Grover",
+      "Irish+Growler",
+      "Istok+Web",
+      "Josefin+Sans",
+      "Josefin+Slab",
+      "Judson",
+      "Jura",
+      "Jura:500",
+      "Jura:600",
+      "Just+Another+Hand",
+      "Just+Me+Again+Down+Here",
+      "Kameron",
+      "Kenia",
+      "Kranky",
+      "Kreon",
+      "Kristi",
+      "La+Belle+Aurore",
+      "Lato:100",
+      "Lato:100italic",
+      "Lato:300", 
+      "Lato",
+      "Lato:bold",  
+      "Lato:900",
+      "League+Script",
+      "Lekton",  
+      "Limelight",  
+      "Lobster",
+      "Lobster Two",
+      "Lora",
+      "Love+Ya+Like+A+Sister",
+      "Loved+by+the+King",
+      "Luckiest+Guy",
+      "Maiden+Orange",
+      "Mako",
+      "Maven+Pro",
+      "Maven+Pro:500",
+      "Maven+Pro:700",
+      "Maven+Pro:900",
+      "Meddon",
+      "MedievalSharp",
+      "Megrim",
+      "Merriweather",
+      "Metrophobic",
+      "Michroma",
+      "Miltonian Tattoo",
+      "Miltonian",
+      "Modern Antiqua",
+      "Monofett",
+      "Molengo",
+      "Mountains of Christmas",
+      "Muli:300", 
+      "Muli", 
+      "Neucha",
+      "Neuton",
+      "News+Cycle",
+      "Nixie+One",
+      "Nobile",
+      "Nova+Cut",
+      "Nova+Flat",
+      "Nova+Mono",
+      "Nova+Oval",
+      "Nova+Round",
+      "Nova+Script",
+      "Nova+Slim",
+      "Nova+Square",
+      "Nunito:light",
+      "Nunito",
+      "OFL+Sorts+Mill+Goudy+TT",
+      "Old+Standard+TT",
+      "Open+Sans:300",
+      "Open+Sans",
+      "Open+Sans:600",
+      "Open+Sans:800",
+      "Open+Sans+Condensed:300",
+      "Orbitron",
+      "Orbitron:500",
+      "Orbitron:700",
+      "Orbitron:900",
+      "Oswald",
+      "Over+the+Rainbow",
+      "Reenie+Beanie",
+      "Pacifico",
+      "Patrick+Hand",
+      "Paytone+One", 
+      "Permanent+Marker",
+      "Philosopher",
+      "Play",
+      "Playfair+Display",
+      "Podkova",
+      "PT+Sans",
+      "PT+Sans+Narrow",
+      "PT+Sans+Narrow:regular,bold",
+      "PT+Serif",
+      "PT+Serif Caption",
+      "Puritan",
+      "Quattrocento",
+      "Quattrocento+Sans",
+      "Radley",
+      "Raleway:100",
+      "Redressed",
+      "Rock+Salt",
+      "Rokkitt",
+  	  "Roboto",
+      "Ruslan+Display",
+      "Schoolbell",
+      "Shadows+Into+Light",
+      "Shanti",
+      "Sigmar+One",
+      "Six+Caps",
+      "Slackey",
+      "Smythe",
+      "Sniglet:800",
+      "Special+Elite",
+      "Stardos+Stencil",
+      "Sue+Ellen+Francisco",
+      "Sunshiney",
+      "Swanky+and+Moo+Moo",
+      "Syncopate",
+      "Tangerine",
+      "Tenor+Sans",
+      "Terminal+Dosis+Light",
+      "The+Girl+Next+Door",
+      "Tinos",
+      "Ubuntu",
+      "Ultra",
+      "Unkempt",
+      "UnifrakturCook:bold",
+      "UnifrakturMaguntia",
+      "Varela",
+      "Varela Round",
+      "Vibur",
+      "Vollkorn",
+      "VT323",
+      "Waiting+for+the+Sunrise",
+      "Wallpoet",
+      "Walter+Turncoat",
+      "Wire+One",
+      "Yanone+Kaffeesatz",
+      "Yanone+Kaffeesatz:300",
+      "Yanone+Kaffeesatz:400",
+      "Yanone+Kaffeesatz:700",
+      "Yeseva+One",
+      "Zeyada"];
+
+    var fontURL = 'https://fonts.googleapis.com/css?family=';
+    
     ///////////////////////////////////////////////////////////////
     // Events
     $(window).resize(function () {
@@ -89,6 +311,7 @@
     });
 
     $("#text").click(function () {
+      console.log("click");
       setText(1);
     });
 
@@ -111,30 +334,20 @@
         setText(-1);
       } else if (event.which == 48) { // Zero
         setText(0);
+      } else if (event.which == 66 || event.which == 98) { // Change background color: b, B
+        randomBackgroundColor();
+      } else if (event.which == 70 || event.which == 102) { // Font: f, F
+        randomFont();
       } else if (event.which == 72 || event.which == 104) { // Help: h, H
         help();
       } else if (event.which == 83 || event.which == 115) { // Full Screen: s, S
         toggleFullscreen();
-      } else if (event.which == 66 || event.which == 98) { // Change background color: b, B
-        randomBackgroundColor();
       } else {
         setText(1);
       }
     });
 
     jQuery(document).ready(function () {
-      $('#font').fontselect().change(function () {
-
-        // replace + signs with spaces for css
-        var font = $(this).val().replace(/\+/g, ' ');
-
-        // split font into family and weight
-        font = font.split(':');
-
-        // set family on paragraphs
-        $('#text').css('font-family', font[0]);
-      });
-
       help();
     });
 
@@ -143,6 +356,8 @@
 
     function help() {
       helpMode = true;
+
+      randomBackgroundColor();
       $("#text").html(helpText);
       BigText("#text", {
         fontSizeFactor: 1,
@@ -157,6 +372,40 @@
       $("body").css("background-color", darkBackgroundColors[index]);
     }
 
+    function randomFont() {
+      var index;
+      var style;
+      var font;
+
+      index = Math.floor(Math.random() * fonts.length);
+      font = fonts[index];
+      addFontLink(font);
+
+      style = toStyle(font);
+      $('#text').css(style);
+      BigText("#text", {
+        fontSizeFactor: 1
+      });
+      console.log(fonts[index]);
+    }
+
+    function addFontLink (font){
+      var link = fontURL + font;
+
+      if ($("link[href*='" + font + "']").length === 0) {
+        $('link:last').after('<link href="' + link + '" rel="stylesheet" type="text/css">');
+		  }
+    };
+
+    function toStyle (font) {
+      var t = font.split(':');
+      return {'font-family': toReadable(t[0]), 'font-weight': (t[1] || 400)};
+    };
+
+    function toReadable (font) {
+      return font.replace(/[\+|:]/g, ' ');
+    };
+
     function setText(sign) {
       var txt;
 
@@ -165,7 +414,6 @@
       } else {
         if (helpMode == true) {
           helpMode = false;
-          randomBackgroundColor();
           txt = count - 1;
         } else {
           txt = parseInt($("#text").text());
@@ -210,9 +458,6 @@
 </head>
 
 <body>
-  <div>
-    <input id="font" type="text" />
-  </div>
   <div id="text">
   </div>
 </body>

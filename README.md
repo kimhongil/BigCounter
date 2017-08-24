@@ -15,6 +15,7 @@ Show fullscreen counter on the html web page.
 | Reset zero | 0 or ESC |
 | Toggle full screen | s, S or double click |
 | Change background color | b, B |
+| Change font | f, F |
 | Help | h, H |
 
 ## Screenshot
