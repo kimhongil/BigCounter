@@ -37,6 +37,23 @@
       font-family: "Times New Roman", Georgia, Serif;
       color: #FFFFFF;
     }
+
+    #home_title {
+      font-size: 2em;
+    }
+
+    #home_font_family_name {
+      float: left;
+    }
+
+    #home_sample {
+      font-size: 2em;
+    }
+
+    #home_press_any_key {
+      color: red;
+    }
+
   </style>
 
   <script>
@@ -44,10 +61,10 @@
     // Global Variables
     var count = 0;
     var helpMode;
-    var helpText = "" +
-      "Big Counter v1.0<br>" +
+    var helpText = "<br>" +
+      "<div id='home_title'>Big Counter</div><br>" +
       "<br>" +
-      "This script prints the full screen number.<br>" +
+      "This script prints the fullscreen number.<br>" +
       "<br>" +
       "KEYBOARD & MOUSE<br>" +
       "- Increment: Any key, click<br>" +
@@ -56,12 +73,19 @@
       "- Full screen: S, double click<br>" +
       "- Change background color: B<br>" +
       "- Change font: F<br>" +
-      "- Help: h<br>" +
+      "- Home: H<br>" +
+      "<br>" +
+      "<div id='home_font_family_name'>Current font family name:&nbsp;</div>" +
+      "<div id='home_font_family_name_value'>Font Family Name</div>" +
+      "<br>" +
+      "<div id='home_sample'>" +
+      "0123456789" +
+      "</div>" +
       "<br>" +
       "Copyright all right reserved.<br>" +
       "https://github.com/kimhongil/BigCounter/<br>" +
       "<br>" +
-      "<font color='red'>PRESS ANY KEY TO CONTINUE...</font><br>" +
+      "<div id='home_press_any_key'>PRESS ANY KEY TO CONTINUE...</div>" +
       "<br>";
     var backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
       "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
@@ -303,7 +327,7 @@
     });
 
     $(document).keyup(function (event) {
-      console.log(event.which);
+      console.log("keyup:", event.which);
       if (event.which == 8) { // Backspace
         setText(-1);
       } else if (event.which == 27) { // ESC
@@ -312,7 +336,7 @@
     });
 
     $(document).keypress(function (event) {
-      console.log("keypress: ", event.which);
+      console.log("keypress:", event.which);
       if (event.which == 45) { // Minus
         setText(-1);
       } else if (event.which == 48) { // Zero
@@ -350,14 +374,17 @@
 
       randomBackgroundColor();
       $("#text").html(helpText);
-      BigText("#text", {
-        fontSizeFactor: 1,
-        textAlign: "left"
-      });
+      refresh();
     }
 
     function refresh() {
       if (helpMode == true) {
+        var fontName;
+
+        fontName = $("#home_font_family_name_value").css('font-family');
+        fontName = fontName.replace(/\"/g, "");
+        $("#home_font_family_name_value").html(fontName);
+
         BigText("#text", {
           fontSizeFactor: 1,
           textAlign: "left"
@@ -389,8 +416,8 @@
       $('#text').css(style);
 
       refresh();
-
-      console.log(fonts[index]);
+      // After download
+      setTimeout(refresh, 500);
     }
 
     function addFontLink (font){
