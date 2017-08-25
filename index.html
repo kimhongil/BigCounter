@@ -31,7 +31,6 @@
     }
 
     #text {
-      margin-top: 0 !important;
       white-space: nowrap;
       line-height: 100%;
       text-align: center;
@@ -382,6 +381,9 @@
     }
 
     function refresh() {
+      $("#text_container").css('width', window.innerWidth);
+      $("#text_container").css('height', window.innerHeight);
+
       if (helpMode == true) {
         var fontName;
 
@@ -493,7 +495,9 @@
 </head>
 
 <body>
-  <div id="text">
+  <div id="text_container">
+    <div id="text">
+    </div>
   </div>
 </body>
 
