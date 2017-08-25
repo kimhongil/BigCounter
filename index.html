@@ -39,10 +39,11 @@
     }
 
     #home_title {
+      text-align: center;
       font-size: 2em;
     }
 
-    #home_font_family_name {
+    #home_font_family {
       float: left;
     }
 
@@ -51,6 +52,7 @@
     }
 
     #home_press_any_key {
+      text-align: center;
       color: red;
     }
 
@@ -75,8 +77,8 @@
       "- Change font: F<br>" +
       "- Home: H<br>" +
       "<br>" +
-      "<div id='home_font_family_name'>Current font family name:&nbsp;</div>" +
-      "<div id='home_font_family_name_value'>Font Family Name</div>" +
+      "<div id='home_font_family'>Current font family:&nbsp;</div>" +
+      "<div id='home_font_family_value'>Font Family</div>" +
       "<br>" +
       "<div id='home_sample'>" +
       "0123456789" +
@@ -381,9 +383,9 @@
       if (helpMode == true) {
         var fontName;
 
-        fontName = $("#home_font_family_name_value").css('font-family');
+        fontName = $("#home_font_family_value").css('font-family');
         fontName = fontName.replace(/\"/g, "");
-        $("#home_font_family_name_value").html(fontName);
+        $("#home_font_family_value").html(fontName);
 
         BigText("#text", {
           fontSizeFactor: 1,
