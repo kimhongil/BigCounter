@@ -89,6 +89,24 @@
     }
   }
 
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  #clock_time.fade-out {
+    animation: fadeOut 0.15s ease-in forwards;
+  }
+
+  #clock_time.fade-in {
+    animation: fadeIn 0.15s ease-out forwards;
+  }
+
   #clock_time.animate {
     animation: slideUp 0.3s ease-in-out;
   }
@@ -437,17 +455,25 @@
 
       $("#text").html(htmlStr);
 
-      // 애니메이션 클래스 적용 후 제거 (재실행 위해)
       const $clockTime = $("#clock_time");
-      $clockTime.addClass("animate");
-      setTimeout(() => $clockTime.removeClass("animate"), 300);
+
+      // 1단계: 페이드아웃
+      $clockTime.removeClass("fade-in").addClass("fade-out");
+
+      // 2단계: 페이드아웃 끝난 후 페이드인
+      setTimeout(() => {
+        // 텍스트 변경 후
+        $clockTime.html(timeStr);
+
+        // 페이드인 적용
+        $clockTime.removeClass("fade-out").addClass("fade-in");
+      }, 150);      
 
       // 글자 크기 조정
       BigText("#text", {
         fontSizeFactor: 1
       });
     }
-
     
     jQuery(document).ready(function () {
       $("#text").click(function () {
