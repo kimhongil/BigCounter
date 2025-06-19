@@ -57,6 +57,15 @@
       color: red;
     }
 
+    #clock_date {
+      font-size: 0.3em;
+      display: block;
+    }
+
+    #clock_time {
+      font-size: 1em;
+      display: block;
+    }
   </style>
 
   <script>
@@ -379,18 +388,32 @@
       clockTimer = setInterval(updateClock, 1000);
     }
 
-  function updateClock() {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const timeStr = `${hours}:${minutes}:${seconds}`;
+    function updateClock() {
+      const now = new Date();
 
-    $("#text").text(timeStr);
-    BigText("#text", {
-      fontSizeFactor: 1
-    });
-  }
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const date = now.getDate().toString().padStart(2, '0');
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+
+      const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayName = weekdays[now.getDay()];
+
+      const dateStr = `${year}-${month}-${date} (${dayName})`;
+      const timeStr = `${hours}:${minutes}:${seconds}`;
+
+      const htmlStr = `
+        <div id="clock_time">${timeStr}</div>
+        <div id="clock_date">${dateStr}</div>
+      `;
+
+      $("#text").html(htmlStr);
+      BigText("#text", {
+        fontSizeFactor: 1
+      });
+    }
 
     
     jQuery(document).ready(function () {
