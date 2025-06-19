@@ -66,6 +66,21 @@
       font-size: 1em;
       display: block;
     }
+
+    @keyframes fadeUpdate {
+    0% {
+      opacity: 0;
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1.0);
+    }
+  }
+
+  #clock_time.animate {
+    animation: fadeUpdate 0.3s ease-in-out;
+  }
   </style>
 
   <script>
@@ -410,6 +425,13 @@
       `;
 
       $("#text").html(htmlStr);
+
+      // 애니메이션 클래스 적용 후 제거 (재실행 위해)
+      const $clockTime = $("#clock_time");
+      $clockTime.addClass("animate");
+      setTimeout(() => $clockTime.removeClass("animate"), 300);
+
+      // 글자 크기 조정
       BigText("#text", {
         fontSizeFactor: 1
       });
