@@ -32,42 +32,48 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
     }
 
     #text {
-        text-align: center;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        }
+      text-align: center;
+      width: 100%;
+    }
 
-        #clock_date {
-        font-size: 3vw;
-        margin-bottom: 1vh;
-        }
+    #clock_wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-height: 90vh;
+      padding: 4vh 2vw;
+      box-sizing: border-box;
+    }
 
-        #clock_time {
-        font-size: 9vw;
-        line-height: 1;
-        opacity: 1;
-        transition: opacity 0.5s ease-in-out;
-        }
+    #clock_date {
+      font-size: 3.5vw;
+      margin-bottom: 3vh;
+    }
 
-        #counter {
-        font-size: 18vw;
-        line-height: 1;
-        display: none;
-        }
+    #clock_time {
+      font-size: 9vw;
+      line-height: 1.1;
+      opacity: 1;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    #counter {
+      font-size: 20vw;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div id="text_container">
     <div id="text">
-      <div id="clock_date"></div>
-      <div id="clock_time"></div>
+      <div id="clock_wrapper">
+        <div id="clock_date"></div>
+        <div id="clock_time"></div>
+      </div>
       <div id="counter"></div>
     </div>
   </div>
@@ -75,6 +81,9 @@
   <script>
     let clockMode = true;
     let count = 0;
+
+    const fonts = ["Times New Roman", "Arial", "Courier New", "Georgia", "Verdana", "Tahoma"];
+    const backgroundColors = ["#2c2c2c", "#1a1a1a", "#3f3f3f", "#444", "#000", "#111"];
 
     function updateClock() {
       const now = new Date();
@@ -102,8 +111,7 @@
 
     function toggleMode() {
       clockMode = !clockMode;
-      document.getElementById('clock_date').style.display = clockMode ? 'block' : 'none';
-      document.getElementById('clock_time').style.display = clockMode ? 'block' : 'none';
+      document.getElementById('clock_wrapper').style.display = clockMode ? 'flex' : 'none';
       document.getElementById('counter').style.display = clockMode ? 'none' : 'block';
     }
 
@@ -114,9 +122,23 @@
       }
     }
 
+    function changeFont() {
+      const font = fonts[Math.floor(Math.random() * fonts.length)];
+      document.body.style.fontFamily = font;
+    }
+
+    function changeBackground() {
+      const color = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+      document.body.style.backgroundColor = color;
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 't' || e.key === 'T') {
         toggleMode();
+      } else if (e.key === 'f' || e.key === 'F') {
+        changeFont();
+      } else if (e.key === 'b' || e.key === 'B') {
+        changeBackground();
       } else if (!clockMode) {
         if (e.key === '0') count = 0;
         else if (e.key === '-' || e.key === 'Backspace') count--;
