@@ -59,6 +59,7 @@
       line-height: 1.1;
       opacity: 1;
       transition: opacity 0.5s ease-in-out;
+      white-space: nowrap;
     }
 
     #counter {
@@ -167,8 +168,30 @@
       timeElem.style.opacity = 0.5;
       setTimeout(() => {
         timeElem.textContent = timeStr;
+        adjustClockFontSize(timeStr);
         timeElem.style.opacity = 1;
       }, 250);
+    }
+
+    function adjustClockFontSize(text) {
+      const timeElem = document.getElementById('clock_time');
+      let testFontSize = clockFontSize;
+      timeElem.style.fontSize = `${testFontSize}vw`;
+      timeElem.textContent = text;
+      const maxWidth = window.innerWidth * 0.95;
+      while (timeElem.scrollWidth > maxWidth && testFontSize > 1) {
+        testFontSize -= 0.5;
+        timeElem.style.fontSize = `${testFontSize}vw`;
+      }
+      while (timeElem.scrollWidth < maxWidth && testFontSize < 20) {
+        testFontSize += 0.5;
+        timeElem.style.fontSize = `${testFontSize}vw`;
+        if (timeElem.scrollWidth > maxWidth) {
+          testFontSize -= 0.5;
+          break;
+        }
+      }
+      clockFontSize = testFontSize;
     }
 
     function toggleMode() {
@@ -227,11 +250,10 @@
       } else if (clockMode) {
         if (e.key === '+' || e.key === '=') {
           clockFontSize += 1;
-          document.getElementById('clock_time').style.fontSize = `${clockFontSize}vw`;
         } else if (e.key === '-' || e.key === '_') {
           clockFontSize = Math.max(1, clockFontSize - 1);
-          document.getElementById('clock_time').style.fontSize = `${clockFontSize}vw`;
         }
+        adjustClockFontSize(document.getElementById('clock_time').textContent);
       } else {
         if (e.key === '0') count = 0;
         else if (e.key === '-' || e.key === 'Backspace') count--;
