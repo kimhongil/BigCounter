@@ -167,31 +167,38 @@
       const timeElem = document.getElementById('clock_time');
       timeElem.style.opacity = 0.5;
       setTimeout(() => {
+        adjustClockFontSize('88:88:88');
         timeElem.textContent = timeStr;
-        adjustClockFontSize(timeStr);
         timeElem.style.opacity = 1;
       }, 250);
     }
 
     function adjustClockFontSize(text) {
       const timeElem = document.getElementById('clock_time');
-      let testFontSize = clockFontSize;
-      timeElem.style.fontSize = `${testFontSize}vw`;
-      timeElem.textContent = text;
       const maxWidth = window.innerWidth * 0.95;
-      while (timeElem.scrollWidth > maxWidth && testFontSize > 1) {
-        testFontSize -= 0.5;
-        timeElem.style.fontSize = `${testFontSize}vw`;
+      let fontSize = clockFontSize;
+      let sizeChanged = false;
+
+      timeElem.textContent = text;
+      timeElem.style.fontSize = `${fontSize}vw`;
+
+      while (timeElem.scrollWidth > maxWidth && fontSize > 1) {
+        fontSize -= 0.5;
+        timeElem.style.fontSize = `${fontSize}vw`;
+        sizeChanged = true;
       }
-      while (timeElem.scrollWidth < maxWidth && testFontSize < 20) {
-        testFontSize += 0.5;
-        timeElem.style.fontSize = `${testFontSize}vw`;
+
+      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 30) {
+        fontSize += 0.5;
+        timeElem.style.fontSize = `${fontSize}vw`;
         if (timeElem.scrollWidth > maxWidth) {
-          testFontSize -= 0.5;
+          fontSize -= 0.5;
+          timeElem.style.fontSize = `${fontSize}vw`;
           break;
         }
       }
-      clockFontSize = testFontSize;
+
+      clockFontSize = fontSize;
     }
 
     function toggleMode() {
