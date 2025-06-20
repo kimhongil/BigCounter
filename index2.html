@@ -82,8 +82,59 @@
     let clockMode = true;
     let count = 0;
 
-    const fonts = ["Times New Roman", "Arial", "Courier New", "Georgia", "Verdana", "Tahoma"];
-    const backgroundColors = ["#2c2c2c", "#1a1a1a", "#3f3f3f", "#444", "#000", "#111"];
+    const fonts = [
+      "Aclonica", "Allan", "Annie+Use+Your+Telescope", "Anonymous+Pro", "Allerta+Stencil", "Allerta", "Amaranth", "Anton",
+      "Architects+Daughter", "Arimo", "Artifika", "Arvo", "Asset", "Astloch", "Bangers", "Bentham", "Bevan", "Bigshot+One",
+      "Bowlby+One", "Bowlby+One+SC", "Brawler", "Buda:300", "Cabin", "Calligraffitti", "Candal", "Cantarell", "Cardo",
+      "Carter+One", "Caudex", "Cedarville+Cursive", "Cherry+Cream+Soda", "Chewy", "Coda", "Coming+Soon", "Copse",
+      "Corben:700", "Cousine", "Covered+By+Your+Grace", "Crafty+Girls", "Crimson+Text", "Crushed", "Cuprum", "Damion",
+      "Dancing+Script", "Dawning+of+a+New+Day", "Didact+Gothic", "Droid+Sans", "Droid+Sans+Mono", "Droid+Serif",
+      "EB+Garamond", "Expletus+Sans", "Fontdiner+Swanky", "Forum", "Francois+One", "Geo", "Give+You+Glory", "Goblin+One",
+      "Goudy+Bookletter+1911", "Gravitas+One", "Gruppo", "Hammersmith+One", "Holtwood+One+SC", "Homemade+Apple",
+      "Inconsolata", "Indie+Flower", "IM+Fell+DW+Pica", "IM+Fell+DW+Pica+SC", "IM+Fell+Double+Pica", "IM+Fell+Double+Pica+SC",
+      "IM+Fell+English", "IM+Fell+English+SC", "IM+Fell+French+Canon", "IM+Fell+French+Canon+SC", "IM+Fell+Great+Primer",
+      "IM+Fell+Great+Primer+SC", "Irish+Grover", "Irish+Growler", "Istok+Web", "Josefin+Sans", "Josefin+Slab", "Judson",
+      "Jura", "Jura:500", "Jura:600", "Just+Another+Hand", "Just+Me+Again+Down+Here", "Kameron", "Kenia", "Kranky",
+      "Kreon", "Kristi", "La+Belle+Aurore", "Lato:100", "Lato:100italic", "Lato:300", "Lato", "Lato:bold", "Lato:900",
+      "League+Script", "Lekton", "Limelight", "Lobster", "Lobster+Two", "Lora", "Love+Ya+Like+A+Sister", "Loved+by+the+King",
+      "Luckiest+Guy", "Maiden+Orange", "Mako", "Maven+Pro", "Maven+Pro:500", "Maven+Pro:700", "Maven+Pro:900", "Meddon",
+      "MedievalSharp", "Megrim", "Merriweather", "Metrophobic", "Michroma", "Miltonian+Tattoo", "Miltonian",
+      "Modern+Antiqua", "Monofett", "Molengo", "Mountains+of+Christmas", "Muli:300", "Muli", "Neucha", "Neuton",
+      "News+Cycle", "Nixie+One", "Nobile", "Nova+Cut", "Nova+Flat", "Nova+Mono", "Nova+Oval", "Nova+Round", "Nova+Script",
+      "Nova+Slim", "Nova+Square", "Nunito:light", "Nunito", "OFL+Sorts+Mill+Goudy+TT", "Old+Standard+TT", "Open+Sans:300",
+      "Open+Sans", "Open+Sans:600", "Open+Sans:800", "Open+Sans+Condensed:300", "Orbitron", "Orbitron:500", "Orbitron:700",
+      "Orbitron:900", "Oswald", "Over+the+Rainbow", "Reenie+Beanie", "Pacifico", "Patrick+Hand", "Paytone+One",
+      "Permanent+Marker", "Philosopher", "Play", "Playfair+Display", "Podkova", "PT+Sans", "PT+Sans+Narrow",
+      "PT+Sans+Narrow:regular,bold", "PT+Serif", "PT+Serif+Caption", "Puritan", "Quattrocento", "Quattrocento+Sans",
+      "Radley", "Raleway:100", "Redressed", "Rock+Salt", "Rokkitt", "Roboto", "Ruslan+Display", "Schoolbell",
+      "Shadows+Into+Light", "Shanti", "Sigmar+One", "Six+Caps", "Slackey", "Smythe", "Sniglet:800", "Special+Elite",
+      "Stardos+Stencil", "Sue+Ellen+Francisco", "Sunshiney", "Swanky+and+Moo+Moo", "Syncopate", "Tangerine", "Tenor+Sans",
+      "Terminal+Dosis+Light", "The+Girl+Next+Door", "Tinos", "Ubuntu", "Ultra", "Unkempt", "UnifrakturCook:bold",
+      "UnifrakturMaguntia", "Varela", "Varela+Round", "Vibur", "Vollkorn", "VT323", "Waiting+for+the+Sunrise", "Wallpoet",
+      "Walter+Turncoat", "Wire+One", "Yanone+Kaffeesatz", "Yanone+Kaffeesatz:300", "Yanone+Kaffeesatz:400",
+      "Yanone+Kaffeesatz:700", "Yeseva+One", "Zeyada"];
+
+    function applyRandomFont() {
+      const font = fonts[Math.floor(Math.random() * fonts.length)];
+      const fontName = font.split(':')[0].replace(/\+/g, ' ');
+      const link = document.createElement('link');
+      link.href = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+      document.body.style.fontFamily = `'${fontName}', sans-serif`;
+    }
+
+    const backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
+      "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
+      "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
+      "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B"
+    ];
+    const darkBackgroundColors = ["#D32F2F", "#C2185B", "#7B1FA2", "#512DA8",
+      "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#00796B",
+      "#388E3C", "#689F38", "#AFB42B", "#FBC02D", "#FFA000",
+      "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"
+    ];
+
 
     function updateClock() {
       const now = new Date();
@@ -122,13 +173,8 @@
       }
     }
 
-    function changeFont() {
-      const font = fonts[Math.floor(Math.random() * fonts.length)];
-      document.body.style.fontFamily = font;
-    }
-
     function changeBackground() {
-      const color = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+      const color = darkBackgroundColors[Math.floor(Math.random() * darkBackgroundColors.length)];
       document.body.style.backgroundColor = color;
     }
 
@@ -136,7 +182,7 @@
       if (e.key === 't' || e.key === 'T') {
         toggleMode();
       } else if (e.key === 'f' || e.key === 'F') {
-        changeFont();
+        applyRandomFont();
       } else if (e.key === 'b' || e.key === 'B') {
         changeBackground();
       } else if (!clockMode) {
