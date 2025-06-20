@@ -50,15 +50,15 @@
     }
 
     #clock_date {
-    font-size: 4.5vw;
-    margin-bottom: 3vh;
+      font-size: 4.5vw;
+      margin-bottom: 3vh;
     }
 
     #clock_time {
-    font-size: 28vw;
-    line-height: 1.1;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
+      font-size: 28vw;
+      line-height: 1.1;
+      opacity: 1;
+      transition: opacity 0.5s ease-in-out;
     }
 
     #counter {
@@ -81,6 +81,7 @@
   <script>
     let clockMode = true;
     let count = 0;
+    let clockFontSize = 28; // vw
 
     const fonts = [
       "Aclonica", "Allan", "Annie+Use+Your+Telescope", "Anonymous+Pro", "Allerta+Stencil", "Allerta", "Amaranth", "Anton",
@@ -213,7 +214,15 @@
         changeBackground();
       } else if (e.key === 's' || e.key === 'S') { // Full Screen
         toggleFullscreen();
-      } else if (!clockMode) {
+      } else if (clockMode) {
+        if (e.key === '+' || e.key === '=') {
+          clockFontSize += 1;
+          document.getElementById('clock_time').style.fontSize = `${clockFontSize}vw`;
+        } else if (e.key === '-' || e.key === '_') {
+          clockFontSize = Math.max(1, clockFontSize - 1);
+          document.getElementById('clock_time').style.fontSize = `${clockFontSize}vw`;
+        }
+      } else {
         if (e.key === '0') count = 0;
         else if (e.key === '-' || e.key === 'Backspace') count--;
         else count++;
@@ -222,6 +231,7 @@
     });
 
     updateClock();
+    applyRandomFont();
     setInterval(() => {
       if (clockMode) updateClock();
     }, 1000);
