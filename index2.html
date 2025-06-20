@@ -178,6 +178,32 @@
       document.body.style.backgroundColor = color;
     }
 
+    function toggleFullscreen(elem) {
+      elem = elem || document.documentElement;
+      if (!document.fullscreenElement && !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 't' || e.key === 'T') {
         toggleMode();
@@ -185,6 +211,8 @@
         applyRandomFont();
       } else if (e.key === 'b' || e.key === 'B') {
         changeBackground();
+      } else if (e.key === 's' || e.key === 'S') { // Full Screen
+        toggleFullscreen();
       } else if (!clockMode) {
         if (e.key === '0') count = 0;
         else if (e.key === '-' || e.key === 'Backspace') count--;
