@@ -42,24 +42,32 @@
     #clock_wrapper {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: center; /* 중앙 기준으로 date는 정렬 */
       justify-content: center;
       max-height: 90vh;
+      width: 100vw;
       padding: 4vh 2vw;
       box-sizing: border-box;
+      position: relative;
     }
 
     #clock_date {
       font-size: 4.5vw;
       margin-bottom: 3vh;
+      text-align: center;
+      width: 100%;
     }
 
     #clock_time {
-      font-size: 28vw;
+      font-size: 13vw;
       line-height: 1.1;
       opacity: 1;
       transition: opacity 0.5s ease-in-out;
       white-space: nowrap;
+      text-align: left;
+      width: auto;
+      align-self: flex-start;
+      margin-left: 2vw; /* 왼쪽 여백을 줘서 고정 시작 위치처럼 보이게 함 */
     }
 
     #counter {
@@ -125,6 +133,12 @@
       link.rel = 'stylesheet';
       document.head.appendChild(link);
       document.body.style.fontFamily = `'${fontName}', sans-serif`;
+
+      // 글꼴이 적용된 후 위치 계산을 약간 지연하여 실행
+      setTimeout(() => {
+        adjustClockFontSize(document.getElementById('clock_time').textContent);
+        fixClockPosition();
+      }, 300);
     }
 
     const backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
@@ -171,6 +185,17 @@
         timeElem.textContent = timeStr;
         timeElem.style.opacity = 1;
       }, 250);
+    }
+
+    function fixClockPosition() {
+      const timeElem = document.getElementById('clock_time');
+      const wrapper = document.getElementById('clock_wrapper');
+      const rect = timeElem.getBoundingClientRect();
+      const parentRect = wrapper.getBoundingClientRect();
+
+      const offset = (parentRect.height - rect.height) / 2;
+      timeElem.style.position = 'relative';
+      timeElem.style.top = `${offset}px`;
     }
 
     function adjustClockFontSize(text) {
@@ -269,11 +294,17 @@
       }
     });
 
+    window.addEventListener('resize', () => {
+      if (clockMode) {
+        adjustClockFontSize(document.getElementById('clock_time').textContent);
+      }
+    });
+
     updateClock();
     applyRandomFont();
     setInterval(() => {
       if (clockMode) updateClock();
     }, 1000);
-  </script>
+</script>
 </body>
 </html>
