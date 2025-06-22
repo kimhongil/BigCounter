@@ -62,7 +62,7 @@
       font-size: 13vw;
       line-height: 1.1;
       opacity: 1;
-      transition: opacity 0.5s ease-in-out;
+      /*transition: opacity 0.5s ease-in-out;*/ /* 애니메이션 효과를 사용안함. */
       white-space: nowrap;
       text-align: left;
       width: auto;
@@ -179,7 +179,9 @@
       document.getElementById('clock_date').textContent = dateStr;
 
       const timeElem = document.getElementById('clock_time');
-      timeElem.style.opacity = 0.5;
+      // 애니메이션 효과를 사용안함.
+      //timeElem.style.opacity = 0.5;
+
       setTimeout(() => {
         adjustClockFontSize('88:88:88');
         timeElem.textContent = timeStr;
