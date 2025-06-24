@@ -55,7 +55,7 @@
       font-size: 13vw;
       line-height: 1.1;
       opacity: 1;
-      /*transition: opacity 0.5s ease-in-out;*/ /* 애니메이션 효과를 사용안함. */
+     /*transition: opacity 0.5s ease-in-out;*/ /* 애니메이션 효과를 사용안함. */
       white-space: nowrap;
       text-align: left;
       width: auto;
@@ -85,6 +85,9 @@
     let count = 0;
     let clockFontSize = 13; // vw
     let fontChangeTime = -1;
+    let nextFont = null;
+    let nextFontSize = 13;
+
 
         const fonts = [
       "Aclonica", "Allan", "Annie+Use+Your+Telescope", "Anonymous+Pro", "Allerta+Stencil", "Allerta", "Amaranth", "Anton",
@@ -117,19 +120,6 @@
       "UnifrakturMaguntia", "Varela", "Varela+Round", "Vibur", "Vollkorn", "VT323", "Waiting+for+the+Sunrise", "Wallpoet",
       "Walter+Turncoat", "Wire+One", "Yanone+Kaffeesatz", "Yanone+Kaffeesatz:300", "Yanone+Kaffeesatz:400",
       "Yanone+Kaffeesatz:700", "Yeseva+One", "Zeyada"];
-
-    function applyRandomFont() {
-      const font = fonts[Math.floor(Math.random() * fonts.length)];
-      const fontName = font.split(':')[0].replace(/\+/g, ' ');
-      const link = document.createElement('link');
-      link.href = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-      document.body.style.fontFamily = `'${fontName}', sans-serif`;
-      return new Promise(resolve => {
-        setTimeout(resolve, 500); // wait for font to load
-      });
-    }
     const backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
       "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
       "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
@@ -141,20 +131,56 @@
       "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"
     ];
 
+    function preloadNextFont() {
+      nextFont = fonts[Math.floor(Math.random() * fonts.length)];
+      const link = document.createElement('link');
+      link.href = `https://fonts.googleapis.com/css2?family=${nextFont}&display=swap`;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+
+      return new Promise(resolve => {
+        setTimeout(() => {
+          findMaxClockFontSize(nextFont).then(size => {
+            nextFontSize = size;
+            resolve();
+          });
+        }, 500);
+      });
+    }
+
+    function applyFont(font) {
+      const fontName = font.split(':')[0].replace(/\+/g, ' ');
+      document.body.style.fontFamily = `'${fontName}', sans-serif`;
+    }
+
+    function changeFont() {
+      nextFont = fonts[Math.floor(Math.random() * fonts.length)];
+      const link = document.createElement('link');
+      link.href = `https://fonts.googleapis.com/css2?family=${nextFont}&display=swap`;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+
+      setTimeout(() => {
+        findMaxClockFontSize(nextFont).then(size => {
+          applyFont(nextFont);
+          clockFontSize = size;
+        });
+      }, 500);
+    }
+
     function updateClock() {
       const now = new Date();
       const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
 
       if (fontChangeTime !== minutes) {
         fontChangeTime = minutes;
         changeBackground();
-        applyRandomFont().then(() => {
-          findMaxClockFontSize().then(drawClock);
-        });
-      } else {
-        drawClock();
+        applyFont(nextFont);
+        clockFontSize = nextFontSize;
+        preloadNextFont();
       }
+
+      drawClock();
     }
 
     function drawClock() {
@@ -177,18 +203,18 @@
       timeElem.style.fontSize = `${clockFontSize}vw`;
     }
 
-    async function findMaxClockFontSize() {
-      const timeElem = document.getElementById('clock_time');
+    async function findMaxClockFontSize(font = null) {
       const testElem = document.createElement('div');
       testElem.style.position = 'absolute';
       testElem.style.visibility = 'hidden';
       testElem.style.whiteSpace = 'nowrap';
       testElem.style.left = '-9999px';
+      if (font) testElem.style.fontFamily = `'${font}', sans-serif`;
       document.body.appendChild(testElem);
 
       let maxFontSize = 60;
       for (let size = 60; size > 1; size -= 0.5) {
-        let maxWidth = 0;
+        let tooWide = false;
         for (let s = 0; s < 60; s++) {
           const now = new Date();
           const hours = String(now.getHours()).padStart(2, '0');
@@ -197,19 +223,19 @@
           const timeStr = `${hours}:${minutes}:${seconds}`;
           testElem.textContent = timeStr;
           testElem.style.fontSize = `${size}vw`;
-          const width = testElem.scrollWidth;
-          if (width > maxWidth) {
-            maxWidth = width;
+          if (testElem.scrollWidth > window.innerWidth * 0.95) {
+            tooWide = true;
+            break;
           }
         }
-        if (maxWidth < window.innerWidth * 0.95) {
+        if (!tooWide) {
           maxFontSize = size;
           break;
         }
       }
 
       document.body.removeChild(testElem);
-      clockFontSize = maxFontSize;
+      return maxFontSize;
     }
 
     function toggleMode() {
@@ -262,9 +288,7 @@
       } else if (e.key === 'b' || e.key === 'B') {
         changeBackground();
       } else if (e.key === 'f' || e.key === 'F') {
-        applyRandomFont().then(() => {
-          findMaxClockFontSize().then(drawClock);
-        });
+        changeFont();
       } else if (e.key === 's' || e.key === 'S') { // Full Screen
         toggleFullscreen();
       } else if (clockMode) {
@@ -282,14 +306,16 @@
       }
     });
 
-        window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       if (clockMode) {
         adjustClockFontSize(document.getElementById('clock_time').textContent);
       }
     });
 
-    applyRandomFont().then(() => {
-      findMaxClockFontSize().then(() => {
+    preloadNextFont().then(() => {
+      applyFont(nextFont);
+      findMaxClockFontSize(nextFont).then(size => {
+        clockFontSize = size;
         updateClock();
         setInterval(() => {
           if (clockMode) updateClock();
