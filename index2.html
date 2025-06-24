@@ -171,13 +171,17 @@
     function updateClock() {
       const now = new Date();
       const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
 
       if (fontChangeTime !== minutes) {
         fontChangeTime = minutes;
-        changeBackground();
         applyFont(nextFont);
         clockFontSize = nextFontSize;
         preloadNextFont();
+      }
+
+      if (seconds === 30) {
+        changeBackground();
       }
 
       drawClock();
