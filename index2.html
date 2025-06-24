@@ -5,25 +5,19 @@
   <title>Big Counter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#3F51B5">
-  <link href="https://cdn.bootcss.com/material-design-lite/1.2.0/material.min.css" rel="stylesheet">
-  <script src="https://cdn.bootcss.com/material-design-lite/1.2.0/material.min.js"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-  <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
-  <script src="https://rawgit.com/BrOrlandi/big-text.js/master/big-text.js"></script>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       background-color: #2c2c2c;
       color: white;
-      font-family: "Times New Roman", serif;
       height: 100%;
       overflow: hidden;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      font-family: sans-serif;
     }
 
     #text_container {
@@ -48,7 +42,6 @@
       width: 100vw;
       padding: 4vh 2vw;
       box-sizing: border-box;
-      position: relative;
     }
 
     #clock_date {
@@ -90,10 +83,10 @@
   <script>
     let clockMode = true;
     let count = 0;
-    let clockFontSize = 28; // vw
-    let prevMinutes = "00";
+    let clockFontSize = 13; // vw
+    let fontChangeTime = -1;
 
-    const fonts = [
+        const fonts = [
       "Aclonica", "Allan", "Annie+Use+Your+Telescope", "Anonymous+Pro", "Allerta+Stencil", "Allerta", "Amaranth", "Anton",
       "Architects+Daughter", "Arimo", "Artifika", "Arvo", "Asset", "Astloch", "Bangers", "Bentham", "Bevan", "Bigshot+One",
       "Bowlby+One", "Bowlby+One+SC", "Brawler", "Buda:300", "Cabin", "Calligraffitti", "Candal", "Cantarell", "Cardo",
@@ -133,14 +126,10 @@
       link.rel = 'stylesheet';
       document.head.appendChild(link);
       document.body.style.fontFamily = `'${fontName}', sans-serif`;
-
-      // 글꼴이 적용된 후 위치 계산을 약간 지연하여 실행
-      setTimeout(() => {
-        adjustClockFontSize(document.getElementById('clock_time').textContent);
-        fixClockPosition();
-      }, 300);
+      return new Promise(resolve => {
+        setTimeout(resolve, 500); // wait for font to load
+      });
     }
-
     const backgroundColors = ["#F44336", "#E91E63", "#E040FB", "#673AB7",
       "#536DFE", "#2196F3", "#03A9F4", "#00BCD4", "#009688",
       "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107",
@@ -152,8 +141,23 @@
       "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64"
     ];
 
-
     function updateClock() {
+      const now = new Date();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      if (fontChangeTime !== minutes) {
+        fontChangeTime = minutes;
+        changeBackground();
+        applyRandomFont().then(() => {
+          findMaxClockFontSize().then(drawClock);
+        });
+      } else {
+        drawClock();
+      }
+    }
+
+    function drawClock() {
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -166,66 +170,46 @@
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
       const timeStr = `${hours}:${minutes}:${seconds}`;
-      
-      if (prevMinutes != minutes) {
-        prevMinutes = minutes;
-        if (now.getMinutes() % 2 === 0) {
-          changeBackground();
-        } else {
-          applyRandomFont();
-        }
-      }
 
       document.getElementById('clock_date').textContent = dateStr;
-
       const timeElem = document.getElementById('clock_time');
-      // 애니메이션 효과를 사용안함.
-      //timeElem.style.opacity = 0.5;
-
-      setTimeout(() => {
-        adjustClockFontSize('88:88:88');
-        timeElem.textContent = timeStr;
-        timeElem.style.opacity = 1;
-      }, 250);
+      timeElem.textContent = timeStr;
+      timeElem.style.fontSize = `${clockFontSize}vw`;
     }
 
-    function fixClockPosition() {
+    async function findMaxClockFontSize() {
       const timeElem = document.getElementById('clock_time');
-      const wrapper = document.getElementById('clock_wrapper');
-      const rect = timeElem.getBoundingClientRect();
-      const parentRect = wrapper.getBoundingClientRect();
+      const testElem = document.createElement('div');
+      testElem.style.position = 'absolute';
+      testElem.style.visibility = 'hidden';
+      testElem.style.whiteSpace = 'nowrap';
+      testElem.style.left = '-9999px';
+      document.body.appendChild(testElem);
 
-      const offset = (parentRect.height - rect.height) / 2;
-      timeElem.style.position = 'relative';
-      timeElem.style.top = `${offset}px`;
-    }
-
-    function adjustClockFontSize(text) {
-      const timeElem = document.getElementById('clock_time');
-      const maxWidth = window.innerWidth * 0.95;
-      let fontSize = clockFontSize;
-      let sizeChanged = false;
-
-      timeElem.textContent = text;
-      timeElem.style.fontSize = `${fontSize}vw`;
-
-      while (timeElem.scrollWidth > maxWidth && fontSize > 1) {
-        fontSize -= 0.5;
-        timeElem.style.fontSize = `${fontSize}vw`;
-        sizeChanged = true;
-      }
-
-      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 30) {
-        fontSize += 0.5;
-        timeElem.style.fontSize = `${fontSize}vw`;
-        if (timeElem.scrollWidth > maxWidth) {
-          fontSize -= 0.5;
-          timeElem.style.fontSize = `${fontSize}vw`;
+      let maxFontSize = 60;
+      for (let size = 60; size > 1; size -= 0.5) {
+        let maxWidth = 0;
+        for (let s = 0; s < 60; s++) {
+          const now = new Date();
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(s).padStart(2, '0');
+          const timeStr = `${hours}:${minutes}:${seconds}`;
+          testElem.textContent = timeStr;
+          testElem.style.fontSize = `${size}vw`;
+          const width = testElem.scrollWidth;
+          if (width > maxWidth) {
+            maxWidth = width;
+          }
+        }
+        if (maxWidth < window.innerWidth * 0.95) {
+          maxFontSize = size;
           break;
         }
       }
 
-      clockFontSize = fontSize;
+      document.body.removeChild(testElem);
+      clockFontSize = maxFontSize;
     }
 
     function toggleMode() {
@@ -234,7 +218,7 @@
       document.getElementById('counter').style.display = clockMode ? 'none' : 'block';
     }
 
-    function incrementCounter() {
+        function incrementCounter() {
       if (!clockMode) {
         count++;
         document.getElementById('counter').textContent = count;
@@ -246,7 +230,7 @@
       document.body.style.backgroundColor = color;
     }
 
-    function toggleFullscreen(elem) {
+        function toggleFullscreen(elem) {
       elem = elem || document.documentElement;
       if (!document.fullscreenElement && !document.mozFullScreenElement &&
         !document.webkitFullscreenElement && !document.msFullscreenElement) {
@@ -275,10 +259,12 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 't' || e.key === 'T') {
         toggleMode();
-      } else if (e.key === 'f' || e.key === 'F') {
-        applyRandomFont();
       } else if (e.key === 'b' || e.key === 'B') {
         changeBackground();
+      } else if (e.key === 'f' || e.key === 'F') {
+        applyRandomFont().then(() => {
+          findMaxClockFontSize().then(drawClock);
+        });
       } else if (e.key === 's' || e.key === 'S') { // Full Screen
         toggleFullscreen();
       } else if (clockMode) {
@@ -287,7 +273,7 @@
         } else if (e.key === '-' || e.key === '_') {
           clockFontSize = Math.max(1, clockFontSize - 1);
         }
-        adjustClockFontSize(document.getElementById('clock_time').textContent);
+        adjustClockFontSize(document.getElementById('clock_time').textContent);        
       } else {
         if (e.key === '0') count = 0;
         else if (e.key === '-' || e.key === 'Backspace') count--;
@@ -296,17 +282,20 @@
       }
     });
 
-    window.addEventListener('resize', () => {
+        window.addEventListener('resize', () => {
       if (clockMode) {
         adjustClockFontSize(document.getElementById('clock_time').textContent);
       }
     });
 
-    updateClock();
-    applyRandomFont();
-    setInterval(() => {
-      if (clockMode) updateClock();
-    }, 1000);
-</script>
+    applyRandomFont().then(() => {
+      findMaxClockFontSize().then(() => {
+        updateClock();
+        setInterval(() => {
+          if (clockMode) updateClock();
+        }, 1000);
+      });
+    });
+  </script>
 </body>
 </html>
