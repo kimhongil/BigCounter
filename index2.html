@@ -132,19 +132,14 @@
     ];
 
     function preloadNextFont() {
-      nextFont = fonts[Math.floor(Math.random() * fonts.length)];
-      const link = document.createElement('link');
-      link.href = `https://fonts.googleapis.com/css2?family=${nextFont}&display=swap`;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-
       return new Promise(resolve => {
-        setTimeout(() => {
-          findMaxClockFontSize(nextFont).then(size => {
-            nextFontSize = size;
-            resolve();
-          });
-        }, 500);
+        const font = fonts[Math.floor(Math.random() * fonts.length)];
+        const link = document.createElement('link');
+        link.href = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
+        link.rel = 'stylesheet';
+        link.onload = () => resolve();
+        document.head.appendChild(link);
+        nextFont = font;
       });
     }
 
@@ -155,25 +150,33 @@
 
     function changeFont() {
       nextFont = fonts[Math.floor(Math.random() * fonts.length)];
-      const link = document.createElement('link');
-      link.href = `https://fonts.googleapis.com/css2?family=${nextFont}&display=swap`;
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
+      const fontLink = document.createElement('link');
+      fontLink.href = `https://fonts.googleapis.com/css2?family=${nextFont}&display=swap`;
+      fontLink.rel = 'stylesheet';
+      document.head.appendChild(fontLink);
 
-      setTimeout(() => {
-        findMaxClockFontSize(nextFont).then(size => {
+      // 웹폰트 로딩 완료 확인
+      const fontName = nextFont.replace(/\+/g, ' ');
+      document.fonts.load(`10vw '${fontName}'`).then(() => {
+        const now = new Date();
+        const nextTime = new Date(now.getTime());
+        nextTime.setMinutes(nextTime.getMinutes());
+        nextTime.setSeconds(0);
+        fontChangeTime = now.getMinutes();
+        findMaxClockFontSize(nextFont, nextTime).then(size => {
           applyFont(nextFont);
           clockFontSize = size;
+          updateClock(); // 적용 즉시 반영
         });
-      }, 500);
+      });
     }
 
-    function updateClock() {
+    function updateClock(force = false) {
       const now = new Date();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
 
-      if (fontChangeTime !== minutes) {
+      if (fontChangeTime !== minutes || force) {
         fontChangeTime = minutes;
         applyFont(nextFont);
         clockFontSize = nextFontSize;
@@ -207,39 +210,75 @@
       timeElem.style.fontSize = `${clockFontSize}vw`;
     }
 
-    async function findMaxClockFontSize(font = null) {
+    async function findMaxClockFontSize(font = null, baseTime = new Date()) {
       const testElem = document.createElement('div');
       testElem.style.position = 'absolute';
       testElem.style.visibility = 'hidden';
       testElem.style.whiteSpace = 'nowrap';
       testElem.style.left = '-9999px';
+      testElem.style.top = '-9999px';
+      testElem.style.lineHeight = '1.1'; // 실제 시계와 동일하게 맞춤
       if (font) testElem.style.fontFamily = `'${font}', sans-serif`;
       document.body.appendChild(testElem);
 
-      let maxFontSize = 60;
-      for (let size = 60; size > 1; size -= 0.5) {
-        let tooWide = false;
+      const maxWidth = window.innerWidth * 0.95;
+      const maxHeight = window.innerHeight * 0.4;  // 40% 정도로 제한
+
+      for (let size = 60; size >= 1; size -= 0.5) {
+        let fitsAll = true;
         for (let s = 0; s < 60; s++) {
-          const now = new Date();
-          const hours = String(now.getHours()).padStart(2, '0');
-          const minutes = String(now.getMinutes()).padStart(2, '0');
-          const seconds = String(s).padStart(2, '0');
-          const timeStr = `${hours}:${minutes}:${seconds}`;
-          testElem.textContent = timeStr;
+          const hh = String(baseTime.getHours()).padStart(2, '0');
+          const mm = String(baseTime.getMinutes()).padStart(2, '0');
+          const ss = String(s).padStart(2, '0');
+          testElem.textContent = `${hh}:${mm}:${ss}`;
           testElem.style.fontSize = `${size}vw`;
-          if (testElem.scrollWidth > window.innerWidth * 0.95) {
-            tooWide = true;
+
+          const width = testElem.scrollWidth;
+          const height = testElem.scrollHeight;
+
+          if (width > maxWidth || height > maxHeight) {
+            fitsAll = false;
             break;
           }
         }
-        if (!tooWide) {
-          maxFontSize = size;
-          break;
+
+        if (fitsAll) {
+          document.body.removeChild(testElem);
+          return size;
         }
       }
 
       document.body.removeChild(testElem);
-      return maxFontSize;
+      return 1;
+    }
+
+    function adjustClockFontSize(text) {
+      const timeElem = document.getElementById('clock_time');
+      const maxWidth = window.innerWidth * 0.95;
+      let fontSize = clockFontSize;
+      let sizeChanged = false;
+
+      timeElem.textContent = text;
+      timeElem.style.fontSize = `${fontSize}vw`;
+
+      while (timeElem.scrollWidth > maxWidth && fontSize > 1) {
+        fontSize -= 0.5;
+        timeElem.style.fontSize = `${fontSize}vw`;
+        sizeChanged = true;
+      }
+
+      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 30) {
+        fontSize += 0.5;
+        timeElem.style.fontSize = `${fontSize}vw`;
+        if (timeElem.scrollWidth > maxWidth) {
+          fontSize -= 0.5;
+          timeElem.style.fontSize = `${fontSize}vw`;
+          break;
+        }
+      }
+
+      clockFontSize = fontSize;
+      console.log(`Adjusted clock font size: ${clockFontSize}vw`);
     }
 
     function toggleMode() {
@@ -318,7 +357,11 @@
 
     preloadNextFont().then(() => {
       applyFont(nextFont);
-      findMaxClockFontSize(nextFont).then(size => {
+      const now = new Date();
+      const nextTime = new Date(now.getTime());
+      nextTime.setMinutes(nextTime.getMinutes() + 1);
+      nextTime.setSeconds(0);
+      findMaxClockFontSize(nextFont, nextTime).then(size => {
         clockFontSize = size;
         updateClock();
         setInterval(() => {
