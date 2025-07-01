@@ -83,10 +83,10 @@
   <script>
     let clockMode = true;
     let count = 0;
-    let clockFontSize = 13; // vw
+    let clockFontSize = 24; // vw
     let fontChangeTime = -1;
     let nextFont = null;
-    let nextFontSize = 13;
+    let nextFontSize = 24;
 
 
         const fonts = [
@@ -157,7 +157,7 @@
 
       // 웹폰트 로딩 완료 확인
       const fontName = nextFont.replace(/\+/g, ' ');
-      document.fonts.load(`10vw '${fontName}'`).then(() => {
+      document.fonts.load(`13vw '${fontName}'`).then(() => {
         const now = new Date();
         const nextTime = new Date(now.getTime());
         nextTime.setMinutes(nextTime.getMinutes());
@@ -166,7 +166,10 @@
         findMaxClockFontSize(nextFont, nextTime).then(size => {
           applyFont(nextFont);
           clockFontSize = size;
-          updateClock(); // 적용 즉시 반영
+          console.log(`Font changed to: ${nextFont}, size: ${clockFontSize}vw`);
+          document.fonts.load(`${clockFontSize}vw '${fontName}'`).then(() => {
+            updateClock(); // 적용 즉시 반영
+          });
         });
       });
     }
@@ -207,10 +210,14 @@
       document.getElementById('clock_date').textContent = dateStr;
       const timeElem = document.getElementById('clock_time');
       timeElem.textContent = timeStr;
+      findMaxClockFontSize(nextFont, now).then(size => {
+        clockFontSize = size;
+      });      
       timeElem.style.fontSize = `${clockFontSize}vw`;
     }
 
     async function findMaxClockFontSize(font = null, baseTime = new Date()) {
+      let testedSizes = [];
       const testElem = document.createElement('div');
       testElem.style.position = 'absolute';
       testElem.style.visibility = 'hidden';
@@ -218,38 +225,47 @@
       testElem.style.left = '-9999px';
       testElem.style.top = '-9999px';
       testElem.style.lineHeight = '1.1'; // 실제 시계와 동일하게 맞춤
-      if (font) testElem.style.fontFamily = `'${font}', sans-serif`;
       document.body.appendChild(testElem);
 
       const maxWidth = window.innerWidth * 0.95;
-      const maxHeight = window.innerHeight * 0.4;  // 40% 정도로 제한
+      for (let s = 0; s < 60; s++) {
+        const hh = String(baseTime.getHours()).padStart(2, '0');
+        const mm = String(baseTime.getMinutes()).padStart(2, '0');
+        const ss = String(s).padStart(2, '0');
 
-      for (let size = 60; size >= 1; size -= 0.5) {
-        let fitsAll = true;
-        for (let s = 0; s < 60; s++) {
-          const hh = String(baseTime.getHours()).padStart(2, '0');
-          const mm = String(baseTime.getMinutes()).padStart(2, '0');
-          const ss = String(s).padStart(2, '0');
-          testElem.textContent = `${hh}:${mm}:${ss}`;
-          testElem.style.fontSize = `${size}vw`;
+        testedSizes[s] = testClockFontSize(testElem, `${hh}:${mm}:${ss}`, clockFontSize);
+      }
+    
+      console.log(`Size: ${clockFontSize}vw New Size: ${Math.max(Math.min(...testedSizes), 1)}vw`);
+      document.body.removeChild(testElem);
+      return Math.max(Math.min(...testedSizes), 1);
+    }
 
-          const width = testElem.scrollWidth;
-          const height = testElem.scrollHeight;
+    function testClockFontSize(timeElem, text, fontSize) {
+      const maxWidth = window.innerWidth * 0.95;
+      //let fontSize = clockFontSize;
+      let sizeChanged = false;
 
-          if (width > maxWidth || height > maxHeight) {
-            fitsAll = false;
-            break;
-          }
-        }
+      timeElem.textContent = text;
+      timeElem.style.fontSize = `${fontSize}vw`;
 
-        if (fitsAll) {
-          document.body.removeChild(testElem);
-          return size;
+      while (timeElem.scrollWidth > maxWidth && fontSize > 1) {
+        fontSize -= 0.5;
+        timeElem.style.fontSize = `${fontSize}vw`;
+        sizeChanged = true;
+      }
+
+      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 30) {
+        fontSize += 0.5;
+        timeElem.style.fontSize = `${fontSize}vw`;
+        if (timeElem.scrollWidth > maxWidth) {
+          fontSize -= 0.5;
+          timeElem.style.fontSize = `${fontSize}vw`;
+          break;
         }
       }
 
-      document.body.removeChild(testElem);
-      return 1;
+      return fontSize;
     }
 
     function adjustClockFontSize(text) {
