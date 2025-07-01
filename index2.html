@@ -145,6 +145,7 @@
 
     function applyFont(font) {
       const fontName = font.split(':')[0].replace(/\+/g, ' ');
+      console.log(`Applying font: ${fontName}`);
       document.body.style.fontFamily = `'${fontName}', sans-serif`;
     }
 
@@ -255,7 +256,7 @@
         sizeChanged = true;
       }
 
-      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 30) {
+      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 60) {
         fontSize += 0.5;
         timeElem.style.fontSize = `${fontSize}vw`;
         if (timeElem.scrollWidth > maxWidth) {
@@ -283,7 +284,7 @@
         sizeChanged = true;
       }
 
-      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 30) {
+      while (!sizeChanged && timeElem.scrollWidth < maxWidth && fontSize < 60) {
         fontSize += 0.5;
         timeElem.style.fontSize = `${fontSize}vw`;
         if (timeElem.scrollWidth > maxWidth) {
