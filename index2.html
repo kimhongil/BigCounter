@@ -158,7 +158,8 @@
 
       // 웹폰트 로딩 완료 확인
       const fontName = nextFont.replace(/\+/g, ' ');
-      document.fonts.load(`13vw '${fontName}'`).then(() => {
+      console.log(`Start size: ${clockFontSize}vw`);
+      document.fonts.load(`${clockFontSize}vw '${fontName}'`).then(() => {
         const now = new Date();
         const nextTime = new Date(now.getTime());
         nextTime.setMinutes(nextTime.getMinutes());
@@ -167,8 +168,8 @@
         findMaxClockFontSize(nextFont, nextTime).then(size => {
           applyFont(nextFont);
           clockFontSize = size;
-          console.log(`Font changed to: ${nextFont}, size: ${clockFontSize}vw`);
-          document.fonts.load(`${clockFontSize}vw '${fontName}'`).then(() => {
+          console.log(`Font changed to: ${nextFont}, size: ${size}vw`);
+          document.fonts.load(`${size}vw '${fontName}'`).then(() => {
             updateClock(); // 적용 즉시 반영
           });
         });
