@@ -317,7 +317,7 @@
       document.body.style.backgroundColor = color;
     }
 
-        function toggleFullscreen(elem) {
+    function toggleFullscreen(elem) {
       elem = elem || document.documentElement;
       if (!document.fullscreenElement && !document.mozFullScreenElement &&
         !document.webkitFullscreenElement && !document.msFullscreenElement) {
@@ -365,6 +365,25 @@
         else count++;
         document.getElementById('counter').textContent = count;
       }
+    });
+
+    document.addEventListener('dblclick', () => {
+      toggleFullscreen();
+    });
+
+    let lastTap = 0;
+
+    document.addEventListener('touchend', function(e) {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+
+      if (tapLength < 300 && tapLength > 0) {
+        // 더블탭으로 간주
+        toggleFullscreen();
+        e.preventDefault();
+      }
+
+      lastTap = currentTime;
     });
 
     window.addEventListener('resize', () => {
