@@ -63,6 +63,17 @@
       margin-left: 2vw; /* 왼쪽 여백을 줘서 고정 시작 위치처럼 보이게 함 */
     }
 
+    #font-info {
+      position: fixed;
+      bottom: 8px;
+      right: 12px;
+      font-size: 0.8vw;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: sans-serif;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
     #counter {
       font-size: 20vw;
       display: none;
@@ -75,6 +86,7 @@
       <div id="clock_wrapper">
         <div id="clock_date"></div>
         <div id="clock_time"></div>
+        <div id="font-info"></div>
       </div>
       <div id="counter"></div>
     </div>
@@ -147,6 +159,9 @@
       const fontName = font.split(':')[0].replace(/\+/g, ' ');
       console.log(`Applying font: ${fontName}`);
       document.body.style.fontFamily = `'${fontName}', sans-serif`;
+      const fontFamily = `'${fontName}', sans-serif`;
+      document.getElementById('font-info').style.fontFamily = fontFamily;
+      updateFontInfo();
     }
 
     function changeFont() {
@@ -167,6 +182,7 @@
         fontChangeTime = now.getMinutes();
         findMaxClockFontSize(nextFont, nextTime).then(size => {
           applyFont(nextFont);
+          updateFontInfo();
           clockFontSize = size;
           console.log(`Font changed to: ${nextFont}, size: ${size}vw`);
           document.fonts.load(`${size}vw '${fontName}'`).then(() => {
@@ -214,6 +230,7 @@
       timeElem.textContent = timeStr;
       findMaxClockFontSize(nextFont, now).then(size => {
         clockFontSize = size;
+        updateFontInfo();
       });      
       timeElem.style.fontSize = `${clockFontSize}vw`;
     }
@@ -299,13 +316,19 @@
       console.log(`Adjusted clock font size: ${clockFontSize}vw`);
     }
 
+    function updateFontInfo() {
+      const fontName = nextFont.replace(/\+/g, ' ');
+      const infoElem = document.getElementById('font-info');
+      infoElem.textContent = `${fontName} - ${clockFontSize.toFixed(1)}vw`;
+    }
+
     function toggleMode() {
       clockMode = !clockMode;
       document.getElementById('clock_wrapper').style.display = clockMode ? 'flex' : 'none';
       document.getElementById('counter').style.display = clockMode ? 'none' : 'block';
     }
 
-        function incrementCounter() {
+    function incrementCounter() {
       if (!clockMode) {
         count++;
         document.getElementById('counter').textContent = count;
@@ -401,6 +424,7 @@
       findMaxClockFontSize(nextFont, nextTime).then(size => {
         clockFontSize = size;
         updateClock();
+        updateFontInfo();
         setInterval(() => {
           if (clockMode) updateClock();
         }, 1000);
